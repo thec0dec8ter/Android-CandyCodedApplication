@@ -5,21 +5,24 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.pluralsight.candycoded.DB.CandyContract.CandyEntry;
-import com.pluralsight.candycoded.DB.CandyCursorAdapter;
-import com.pluralsight.candycoded.DB.CandyDbHelper;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.pluralsight.candycoded.DB.CandyContract;
+import com.pluralsight.candycoded.DB.CandyCursorAdapter;
+import com.pluralsight.candycoded.DB.CandyDbHelper;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -79,21 +82,26 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main, menu);
         return true;
     }
-    // ***
-    // TODO - Task 1 - Show Store Information Activity
-    // ***
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent = new Intent(MainActivity.this, InfoActivity.class);
+        startActivity(intent);
+        return super.onOptionsItemSelected(item);
+    }
 
     private void addCandiesToDatabase(Candy[] candies) {
         SQLiteDatabase db = candyDbHelper.getWritableDatabase();
 
         for (Candy candy : candies) {
             ContentValues values = new ContentValues();
-            values.put(CandyEntry.COLUMN_NAME_NAME, candy.name);
-            values.put(CandyEntry.COLUMN_NAME_PRICE, candy.price);
-            values.put(CandyEntry.COLUMN_NAME_DESC, candy.description);
-            values.put(CandyEntry.COLUMN_NAME_IMAGE, candy.image);
+            values.put(CandyContract.CandyEntry.COLUMN_NAME_NAME, candy.name);
+            values.put(CandyContract.CandyEntry.COLUMN_NAME_PRICE, candy.price);
+            values.put(CandyContract.CandyEntry.COLUMN_NAME_DESC, candy.description);
+            values.put(CandyContract.CandyEntry.COLUMN_NAME_IMAGE, candy.image);
 
-            db.insert(CandyEntry.TABLE_NAME, null, values);
+            db.insert(CandyContract.CandyEntry.TABLE_NAME, null, values);
         }
     }
 }
